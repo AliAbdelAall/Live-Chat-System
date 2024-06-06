@@ -1,19 +1,32 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 
-const userSchema = new Schema({
+interface IUser extends Document {
+	firstName: string;
+	lastName: string;
+	username: string;
+	password: string;
+	profilePic?: string;
+}
+
+const userSchema = new Schema<IUser>({
 	firstName: {
 		type: String,
-		require: true,
+		required: true,
+		trim: true,
+	},
+	lastName: {
+		type: String,
+		required: true,
 		trim: true,
 	},
 	username: {
 		type: String,
-		require: true,
+		required: true,
 		unique: true,
 	},
 	password: {
 		type: String,
-		require: true,
+		required: true,
 		minlength: 6,
 	},
 	profilePic: {
@@ -22,6 +35,6 @@ const userSchema = new Schema({
 	},
 });
 
-const User = model("User", userSchema);
+const User = model<IUser>("User", userSchema);
 
 export default User;

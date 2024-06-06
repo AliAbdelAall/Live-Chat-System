@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { hash, genSalt } from "bcryptjs";
+import { hash, genSalt, compare } from "bcryptjs";
 import User, { IUser } from "../models/user.model";
 import { generateTokenAndSetCookie } from "../utils/generateToken";
 
@@ -40,6 +40,34 @@ export const signup = async (
 		return res.status(201).json({ message: "User created successfully" });
 	} catch (error) {
 		console.log("Signup: Internal server error", error);
+		return res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+export const login = async (req: Request, res: Response): Promise<Response> => {
+	try {
+		const { username, password } = req.body;
+
+		const user = await User.findOne({ username });
+
+		if (!user) {
+			console.log("Login: user does not exist");
+			return res.status(400).json({ error: "User does not exist" });
+		}
+
+		const isPasswordCorrect = await compare(password, user.password);
+
+		if (!isPasswordCorrect) {
+			console.log("Login: Incorrect username/password");
+			return res
+				.status(400)
+				.json({ error: "Incorrect username/password" });
+		}
+		generateTokenAndSetCookie(user._id, res);
+
+		return res.status(200).json({ message: "User logged-in successfully" });
+	} catch (error) {
+		console.log("Login: Internal server error", error);
 		return res.status(500).json({ error: "Internal server error" });
 	}
 };

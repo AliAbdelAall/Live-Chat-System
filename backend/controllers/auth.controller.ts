@@ -79,7 +79,7 @@ export const logout = (req: Request, res: Response): Response => {
 			.status(200)
 			.json({ message: "User logged-out successfully" });
 	} catch (error) {
-		console.log("Login: Internal server error", error);
+		console.log("Logout: Internal server error", error);
 		return res.status(500).json({ error: "Internal server error" });
 	}
 };

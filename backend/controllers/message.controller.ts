@@ -30,7 +30,10 @@ export const sendMessage = async (
 		if (newMessage) {
 			conversation.messages.push(newMessage._id);
 		}
-		return res.status(201).json({ message: "Message sent successfully" });
+
+		await Promise.all([conversation.save(), await newMessage.save()]);
+
+		return res.status(201).json({ newMessage });
 	} catch (error) {
 		console.log("SendMessage: Internal server error", error);
 		return res.status(500).json({ error: "Internal server error" });

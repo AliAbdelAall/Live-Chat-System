@@ -1,10 +1,18 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import User from "../models/user.model";
+import User, { IUser } from "../models/user.model";
 import { ObjectId } from "mongoose";
 
 interface JwtPayload {
 	userId: ObjectId;
+}
+
+declare global {
+	namespace Express {
+		interface Request {
+			user?: IUser;
+		}
+	}
 }
 
 export const authMiddleware = async (

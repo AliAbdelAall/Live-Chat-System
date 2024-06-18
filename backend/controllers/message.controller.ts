@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Message, { IMessage } from "../models/message.model";
+import Message from "../models/message.model";
 import Conversation from "../models/conversation.model";
 
 export const sendMessage = async (
